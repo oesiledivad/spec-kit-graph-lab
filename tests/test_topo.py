@@ -30,6 +30,8 @@ def _nx(g: DirectedGraph) -> nx.DiGraph:
 def _random_graph(rng, n, m, acyclic):
     names = [f"n{i:02d}" for i in range(n)]
     rng.shuffle(names)
+    max_edges = n * (n - 1) // 2 if acyclic else n * n
+    m = min(m, max_edges)
     edges = set()
     while len(edges) < m:
         i, j = rng.randrange(n), rng.randrange(n)
