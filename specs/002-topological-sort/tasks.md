@@ -37,6 +37,7 @@
 - [ ] T112 [P] [US2] Prueba de aceptación AS-104 (stderr exacto, stdout vacío, código 3 con `data/build-with-cycle.csv`) en `tests/test_cli_order.py`
 - [ ] T113 [P] [US2] Prueba de aceptación AS-108 (auto-lazo `a -> a`, código 3) en `tests/test_cli_order.py`
 - [ ] T114 [P] [US2] Prueba de aceptación AS-109 (un ciclo por grupo: `a -> b -> a`) en `tests/test_cli_order.py`
+- [ ] T115b [P] [US2] Prueba unitaria de desempate entre ciclos igual de cortos (`a,c`, `c,a`, `a,b`, `b,a` → `a -> b -> a`) en `tests/test_topo.py`
 - [ ] T115 [P] [US2] Pruebas con oráculo NetworkX en `tests/test_topo.py`: se lanza `CycleError` ⇔ `not nx.is_directed_acyclic_graph`; grupos reportados = SCC circulares de NetworkX; cada ciclo reportado es un ciclo real del grafo
 
 ### Implementation

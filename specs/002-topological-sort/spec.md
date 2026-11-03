@@ -10,6 +10,10 @@
 
 ## Clarifications
 
+### Session 2026-11-03 (correcciones de /speckit-analyze)
+- Q: Si hay varios ciclos igual de cortos en un grupo, ¿cuál se muestra? → A: El menor comparando vértice por vértice (explorando primero los sucesores menores). FR-106 decía "siguiendo los vértices menores", que era ambiguo.
+- Q: ¿Cómo se escribe `<archivo>` en el mensaje de ciclos (p. ej. `data\build-with-cycle.csv` en Windows)? → A: Tal como lo escribió el usuario, igual que en la Feature 001.
+
 ### Session 2026-11-03
 - Q: ¿Cómo pide el usuario el orden topológico? → A: Con un subcomando nuevo `order`: `python -m graphcli order <archivo>`, paralelo a `show`.
 - Q: ¿Cuál es el formato de salida? → A: Un vértice por línea en `stdout`, sin encabezado ni numeración, para que la salida se pueda usar directamente en otros programas.
@@ -96,8 +100,8 @@ Como usuario, quiero que `order` acepte y rechace exactamente los mismos archivo
 - **FR-102**: El orden mostrado DEBE contener cada vértice del grafo exactamente una vez (incluidos los aislados), y para cada arista `u -> v`, `u` DEBE aparecer antes que `v`.
 - **FR-103**: Cuando existan varios órdenes válidos, el sistema DEBE mostrar el menor en orden lexicográfico: en cada posición, el menor vértice por código Unicode entre los que ya no tienen predecesores pendientes.
 - **FR-104**: La salida exitosa DEBE escribirse en `stdout`, un vértice por línea, sin encabezado ni numeración; un grafo vacío produce salida vacía con código 0.
-- **FR-105**: Si el grafo tiene al menos un ciclo (incluidos auto-lazos), el sistema NO DEBE escribir nada en `stdout`, DEBE escribir en `stderr` la línea `error: <archivo>: no existe un orden topológico; el grafo tiene <K> ciclo(s):` seguida de un ciclo por línea con indentación de dos espacios en formato `v1 -> v2 -> ... -> v1`, y DEBE terminar con código de salida 3.
-- **FR-106**: El sistema DEBE reportar un ciclo por cada grupo de vértices mutuamente alcanzables que contenga un ciclo. Cada ciclo DEBE empezar en el menor vértice (por código Unicode) de su grupo y ser el más corto que vuelve a él; ante empates se elige siguiendo los vértices menores. Los ciclos se listan ordenados por su vértice inicial.
+- **FR-105**: Si el grafo tiene al menos un ciclo (incluidos auto-lazos), el sistema NO DEBE escribir nada en `stdout`, DEBE escribir en `stderr` la línea `error: <archivo>: no existe un orden topológico; el grafo tiene <K> ciclo(s):` seguida de un ciclo por línea con indentación de dos espacios en formato `v1 -> v2 -> ... -> v1`, y DEBE terminar con código de salida 3. `<archivo>` es la ruta tal como la escribió el usuario (igual que en los errores de la Feature 001).
+- **FR-106**: El sistema DEBE reportar un ciclo por cada grupo de vértices mutuamente alcanzables que contenga un ciclo. Cada ciclo DEBE empezar en el menor vértice (por código Unicode) de su grupo y ser el más corto que vuelve a él; si hay varios igual de cortos, se elige el que resulta de explorar siempre primero los sucesores menores por código Unicode (es decir, el menor de ellos comparando vértice por vértice). Los ciclos se listan ordenados por su vértice inicial.
 - **FR-107**: Los errores de lectura (código 1), formato (código 2) y uso (código 2) DEBEN comportarse exactamente igual que en la Feature 001.
 - **FR-108**: Los códigos de salida de `order` son: `0` éxito, `1` lectura, `2` formato/uso, `3` el grafo tiene ciclos.
 
