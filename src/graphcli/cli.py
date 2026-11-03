@@ -7,10 +7,12 @@ import sys
 
 from graphcli.csv_parser import GraphFileError, GraphFormatError, load_graph
 from graphcli.graph import DirectedGraph
+from graphcli.topo import CycleError, topological_order
 
 EXIT_OK = 0
 EXIT_FILE_ERROR = 1
 EXIT_FORMAT_ERROR = 2
+EXIT_CYCLE = 3
 
 
 def format_graph(graph: DirectedGraph) -> str:
@@ -28,6 +30,22 @@ def cmd_show(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+def cmd_order(args: argparse.Namespace) -> int:
+    graph = load_graph(args.file)
+    try:
+        order = topological_order(graph)
+    except CycleError as exc:
+        lines = [
+            f"error: {args.file}: no existe un orden topológico; "
+            f"el grafo tiene {len(exc.cycles)} ciclo(s):"
+        ]
+        lines += ["  " + " -> ".join(cycle) for cycle in exc.cycles]
+        sys.stderr.write("\n".join(lines) + "\n")
+        return EXIT_CYCLE
+    sys.stdout.write("".join(f"{v}\n" for v in order))
+    return EXIT_OK
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="graphcli",
@@ -38,6 +56,10 @@ def build_parser() -> argparse.ArgumentParser:
     show = sub.add_parser("show", help="muestra los vértices y aristas del grafo")
     show.add_argument("file", help="ruta al archivo CSV")
     show.set_defaults(func=cmd_show)
+
+    order = sub.add_parser("order", help="muestra un orden topológico del grafo")
+    order.add_argument("file", help="ruta al archivo CSV")
+    order.set_defaults(func=cmd_order)
     return parser
 
 

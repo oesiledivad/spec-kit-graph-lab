@@ -46,3 +46,15 @@ class DirectedGraph:
     def in_degree(self, v: str) -> int:
         """Número de aristas que llegan a ``v``."""
         return sum(1 for targets in self._adj.values() if v in targets)
+
+    def in_degrees(self) -> dict[str, int]:
+        """Grado de entrada de todos los vértices en una sola pasada, O(V + E).
+
+        Agregado en la Feature 002: llamar a ``in_degree`` por cada vértice
+        costaría O(V * (V + E)).
+        """
+        degrees = dict.fromkeys(self.vertices, 0)
+        for targets in self._adj.values():
+            for t in targets:
+                degrees[t] += 1
+        return degrees
