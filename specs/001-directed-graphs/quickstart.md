@@ -14,6 +14,15 @@
 
 ---
 
+## 1b. Instalación (una sola vez)
+
+```bash
+python -m venv .venv
+# Windows: .venv\Scripts\Activate.ps1   |   Linux/macOS: source .venv/bin/activate
+pip install -e ".[test]"
+pytest -v
+```
+
 ## 2. Invocación Básica del CLI
 
 El CLI se ejecuta desde la raíz del repositorio mediante el subcomando `show`:
