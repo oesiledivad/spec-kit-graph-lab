@@ -10,6 +10,11 @@
 
 ## Clarifications
 
+### Session 2026-11-03 (correcciones de /speckit-analyze)
+- Q: Si hay líneas en blanco antes del encabezado, ¿qué número de línea se reporta cuando el encabezado es inválido? → A: El número de línea real donde está el encabezado (FR-002 y AS-009 decían "línea 1", lo que contradecía FR-011).
+- Q: ¿Qué código de salida corresponde a un archivo que no es UTF-8 válido o a una ruta que es una carpeta? → A: Código 1 ("no puede leerse"), con el nombre del archivo en `stderr` (FR-010, AS-020).
+- Q: ¿El caso "sin argumento de archivo" necesita escenario propio? → A: Sí, AS-019 (antes solo estaba en Edge Cases).
+
 ### Session 2026-11-02
 - Q: ¿Cuál debe ser el nombre exacto del subcomando del CLI para visualizar el grafo? (FR-001) → A: El subcomando exacto es `show`.
 - Q: ¿Cómo debe manejar el sistema las líneas en blanco o que contienen únicamente espacios en blanco en el archivo CSV? (FR-002) → A: Se ignoran silenciosamente sin generar vértices, aristas ni errores.
@@ -122,10 +127,12 @@ Como usuario, quiero recibir mensajes descriptivos en caso de suministrar un arc
 
 1. **AS-007**: **Given** un nombre o ubicación de archivo que no existe en el sistema de archivos, **When** el usuario ejecuta el comando de visualización, **Then** el sistema escribe un mensaje de error explicativo en la salida de errores especificando el nombre del archivo no encontrado y termina con código de salida 1.
 2. **AS-008**: **Given** un archivo de entrada completamente vacío (0 bytes), **When** el usuario ejecuta el comando, **Then** el sistema escribe en la salida de errores que el archivo carece del encabezado requerido `source,target` indicando la línea 1 y termina con código de salida 2.
-3. **AS-009**: **Given** un archivo cuyo primer registro no corresponde exactamente en minúsculas al encabezado `source,target` (por ejemplo con nombres de columna distintos o con variaciones de mayúsculas como `Source,Target`), **When** el usuario ejecuta el subcomando `show`, **Then** el sistema escribe un mensaje de error en la salida de errores indicando que el encabezado es inválido en la línea 1 y termina con código de salida 2.
+3. **AS-009**: **Given** un archivo cuyo primer registro no corresponde exactamente en minúsculas al encabezado `source,target` (por ejemplo con nombres de columna distintos o con variaciones de mayúsculas como `Source,Target`), **When** el usuario ejecuta el subcomando `show`, **Then** el sistema escribe un mensaje de error en la salida de errores indicando que el encabezado es inválido y el número de línea donde se encontró (la línea 1 si no hay líneas en blanco antes del encabezado) y termina con código de salida 2.
 4. **AS-010**: **Given** un archivo con una fila con un número de columnas diferente a dos (por ejemplo tres columnas o una sola sin coma), **When** el usuario ejecuta el comando, **Then** el sistema escribe un mensaje de error en la salida de errores indicando el número de línea que contiene el formato inválido y termina con código de salida 2.
 5. **AS-012**: **Given** un archivo con una fila que solo contiene la coma delimitadora o espacios alrededor de ella (por ejemplo `,` o ` , `), **When** el usuario ejecuta el subcomando `show`, **Then** el sistema escribe un mensaje de error en la salida de errores indicando el número de línea que contiene el formato inválido y termina con código de salida 2.
 6. **AS-013**: **Given** un archivo que contiene filas válidas y una fila con formato inválido en una línea intermedia, **When** el usuario ejecuta el subcomando `show`, **Then** el sistema aborta de inmediato la carga ante la primera fila inválida ("fail-fast"), escribe el mensaje de error con el número de línea en la salida de errores, no emite ningún grafo parcial en la salida estándar y finaliza con código de salida 2.
+7. **AS-019**: **Given** que el usuario ejecuta el subcomando `show` sin indicar la ruta del archivo, **When** se procesa la invocación, **Then** el sistema escribe un mensaje de uso en la salida de errores, no escribe nada en la salida estándar, no muestra ningún traceback y termina con código de salida 2.
+8. **AS-020**: **Given** un archivo cuyo contenido no es UTF-8 válido (por ejemplo codificado en Latin-1 con caracteres acentuados), **When** el usuario ejecuta el subcomando `show`, **Then** el sistema escribe en la salida de errores que el archivo no puede leerse como UTF-8, indicando el nombre del archivo, y termina con código de salida 1.
 
 ---
 
@@ -142,8 +149,8 @@ Como usuario, quiero recibir mensajes descriptivos en caso de suministrar un arc
 
 ### Functional Requirements
 
-- **FR-001**: El sistema DEBE proveer el subcomando `show` para la visualización de grafos, el cual recibe como argumento la ruta a un archivo de datos en formato CSV (ejecutable mediante `python -m <paquete> show <archivo>`).
-- **FR-002**: El sistema DEBE validar que la primera línea no vacía del archivo de entrada corresponda exactamente al encabezado en minúsculas `source,target` (ignorando espacios en blanco circundantes). Cualquier variación en el uso de mayúsculas y minúsculas (por ejemplo `Source,Target` o `SOURCE,TARGET`) DEBE ser rechazada como error de formato indicando la línea 1 en la salida de errores (`stderr`) con código de salida 2. Asimismo, el sistema DEBE soportar codificación UTF-8 tanto con marca de orden de bytes (BOM inicial `\ufeff`) como sin ella, descartando transparentemente el BOM si está presente sin considerarlo parte del encabezado.
+- **FR-001**: El sistema DEBE proveer el subcomando `show` para la visualización de grafos, el cual recibe como argumento la ruta a un archivo de datos en formato CSV (ejecutable mediante `python -m graphcli show <archivo>`).
+- **FR-002**: El sistema DEBE validar que la primera línea no vacía del archivo de entrada corresponda exactamente al encabezado en minúsculas `source,target` (ignorando espacios en blanco circundantes). Cualquier variación en el uso de mayúsculas y minúsculas (por ejemplo `Source,Target` o `SOURCE,TARGET`) DEBE ser rechazada como error de formato indicando el número de línea real del encabezado en la salida de errores (`stderr`) con código de salida 2. Asimismo, el sistema DEBE soportar codificación UTF-8 tanto con marca de orden de bytes (BOM inicial `\ufeff`) como sin ella, descartando transparentemente el BOM si está presente sin considerarlo parte del encabezado.
 - **FR-003**: El sistema DEBE construir un grafo dirigido no ponderado identificando los vértices y las aristas dirigidas desde el origen (`source`) hacia el destino (`target`).
 - **FR-004**: El sistema DEBE considerar como vértice cualquier identificador no vacío que aparezca en la columna `source` o en la columna `target`.
 - **FR-005**: El sistema DEBE procesar filas con origen no vacío y destino vacío (por ejemplo `watch,`) registrando el origen como un vértice válido sin aristas dirigidas salientes. Filas con origen vacío (incluyendo filas con destino presente como `,target` y filas con origen y destino vacíos como `,` o ` , `) DEBEN ser rechazadas como error de formato indicando el número de línea en la salida de errores (`stderr`) con código de salida 2.
@@ -151,7 +158,7 @@ Como usuario, quiero recibir mensajes descriptivos en caso de suministrar un arc
 - **FR-007**: El sistema DEBE deduplicar silenciosamente aristas dirigidas repetidas en el archivo de entrada, contabilizando y mostrando cada arista única una sola vez.
 - **FR-008**: Toda salida de resultados exitosos DEBE enviarse exclusivamente a la salida estándar (`stdout`).
 - **FR-009**: Todos los mensajes de advertencia, uso o error DEBEN enviarse exclusivamente a la salida de errores (`stderr`), indicando archivo y línea cuando aplique, sin mostrar nunca volcados internos de excepción al usuario.
-- **FR-010**: El sistema DEBE retornar código de salida `0` cuando la ejecución sea exitosa, código `1` cuando el archivo no exista o no pueda leerse, y código `2` ante errores de formato o sintaxis en los argumentos o datos.
+- **FR-010**: El sistema DEBE retornar código de salida `0` cuando la ejecución sea exitosa, código `1` cuando el archivo no exista o no pueda leerse (incluye: la ruta es una carpeta, falta de permisos, o contenido que no es UTF-8 válido), y código `2` ante errores de formato o sintaxis en los argumentos o datos.
 - **FR-011**: El sistema DEBE ignorar silenciosamente cualquier línea en blanco o compuesta únicamente por espacios en blanco en el archivo CSV, sin crear vértices ni aristas ni considerarla un error de formato.
 - **FR-012**: El sistema DEBE operar bajo el principio de detención inmediata ("fail-fast"): ante la primera fila con formato o sintaxis inválida en el archivo de datos, DEBE abortar inmediatamente la carga, escribir el mensaje de error especificando el número de línea en la salida de errores (`stderr`), abstenerse de emitir cualquier salida en `stdout` y finalizar con código de salida 2.
 - **FR-013**: El sistema DEBE recortar los espacios en blanco iniciales y finales (strip/trim) de cada nombre de vértice extraído de las columnas `source` y `target` antes de incorporarlo al grafo o evaluarlo.
@@ -170,7 +177,7 @@ Como usuario, quiero recibir mensajes descriptivos en caso de suministrar un arc
 
 - **SC-001**: Los usuarios pueden visualizar cualquier grafo de dependencias de hasta 10,000 aristas en menos de 1 segundo de tiempo de ejecución.
 - **SC-002**: El 100% de las ejecuciones sobre el mismo archivo de entrada producen idéntica salida byte a byte (determinismo absoluto).
-- **SC-003**: El 100% de los escenarios de aceptación automatizados (`AS-001` a `AS-018`) son verificables mediante pruebas independientes.
+- **SC-003**: El 100% de los escenarios de aceptación automatizados (`AS-001` a `AS-020`) son verificables mediante pruebas independientes.
 - **SC-004**: Cero volcados internos o trazas de excepción no controladas son expuestas a los usuarios en cualquier escenario de error.
 
 ## Assumptions

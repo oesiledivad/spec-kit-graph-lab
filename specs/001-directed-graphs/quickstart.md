@@ -27,7 +27,7 @@ python -m graphcli show <archivo>
 ## 3. Escenarios de Validación End-to-End
 
 ### Escenario 1: Carga y visualización de grafo con dependencias básicas (`small-dag.csv`)
-Verifica [AS-001](file:///C:/Users/Laptop/spec-kit-graph-lab/specs/001-directed-graphs/spec.md#L59) y el manejo de vértices aislados [AS-004](file:///C:/Users/Laptop/spec-kit-graph-lab/specs/001-directed-graphs/spec.md#L99):
+Verifica [AS-001](spec.md#L59) y el manejo de vértices aislados [AS-004](spec.md#L99):
 
 ```bash
 python -m graphcli show data/small-dag.csv
@@ -61,7 +61,7 @@ Edges (9):
 ---
 
 ### Escenario 2: Deduplicación de aristas y nombres compuestos (`cs-curriculum.csv`)
-Verifica [AS-002](file:///C:/Users/Laptop/spec-kit-graph-lab/specs/001-directed-graphs/spec.md#L83) y [AS-005](file:///C:/Users/Laptop/spec-kit-graph-lab/specs/001-directed-graphs/spec.md#L100):
+Verifica [AS-002](spec.md#L83) y [AS-005](spec.md#L100):
 
 ```bash
 python -m graphcli show data/cs-curriculum.csv
@@ -75,7 +75,7 @@ python -m graphcli show data/cs-curriculum.csv
 ---
 
 ### Escenario 3: Grafos con ciclos y auto-bucles (`build-with-cycle.csv`)
-Verifica [AS-003](file:///C:/Users/Laptop/spec-kit-graph-lab/specs/001-directed-graphs/spec.md#L84) y [AS-006](file:///C:/Users/Laptop/spec-kit-graph-lab/specs/001-directed-graphs/spec.md#L101):
+Verifica [AS-003](spec.md#L84) y [AS-006](spec.md#L101):
 
 ```bash
 python -m graphcli show data/build-with-cycle.csv
@@ -90,21 +90,21 @@ python -m graphcli show data/build-with-cycle.csv
 
 ### Escenario 4: Manejo de errores y política Fail-Fast
 
-1. **Archivo no encontrado** ([AS-007](file:///C:/Users/Laptop/spec-kit-graph-lab/specs/001-directed-graphs/spec.md#L119)):
+1. **Archivo no encontrado** ([AS-007](spec.md#L119)):
    ```bash
    python -m graphcli show data/archivo-inexistente.csv
    ```
    *Salida en stderr*: Mensaje de error indicando que el archivo no existe.  
    *Código de salida*: `1`
 
-2. **Archivo vacío (0 bytes)** ([AS-008](file:///C:/Users/Laptop/spec-kit-graph-lab/specs/001-directed-graphs/spec.md#L120)):
+2. **Archivo vacío (0 bytes)** ([AS-008](spec.md#L120)):
    ```bash
    python -m graphcli show tests/fixtures/vacio.csv
    ```
    *Salida en stderr*: Error indicando falta de encabezado en línea 1.  
    *Código de salida*: `2`
 
-3. **Fila inválida con detención inmediata** ([AS-013](file:///C:/Users/Laptop/spec-kit-graph-lab/specs/001-directed-graphs/spec.md#L124)):
+3. **Fila inválida con detención inmediata** ([AS-013](spec.md#L124)):
    ```bash
    python -m graphcli show tests/fixtures/corrupto.csv
    ```

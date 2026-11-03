@@ -3,7 +3,7 @@
 **Feature**: Directed Graphs (`001-directed-graphs`)  
 **Input**: Design documents from `specs/001-directed-graphs/` (`spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/`, `quickstart.md`)  
 **Prerequisites**: `plan.md`, `spec.md`, `constitution.md`, `data-model.md`, `contracts/`  
-**Tests**: Mandatory per Constitution (Principio III) and user instructions. Every acceptance scenario (`AS-001` to `AS-018`) has an automated test task referencing its ID, and tests are placed before implementation.
+**Tests**: Mandatory per Constitution (Principio III) and user instructions. Every acceptance scenario (`AS-001` to `AS-020`) has an automated test task referencing its ID, and tests are placed before implementation.
 
 ---
 
@@ -100,11 +100,12 @@
 - [ ] T027 [P] [US3] Create test fixtures in `tests/fixtures/` for error scenarios: `empty.csv` (0 bytes), `invalid_header.csv`, `header_uppercase.csv`, `malformed_columns.csv`, `empty_fields_comma.csv`, and `fail_fast_intermediate.csv`
 - [ ] T028 [P] [US3] Implement automated acceptance test for AS-007 (non-existent file reports file name in `stderr` with exit code 1) in `tests/test_cli.py`
 - [ ] T029 [P] [US3] Implement automated acceptance test for AS-008 (empty file 0 bytes reports missing header on line 1 in `stderr` with exit code 2) in `tests/test_cli.py`
-- [ ] T030 [P] [US3] Implement automated acceptance test for AS-009 (header mismatch or uppercase `Source,Target` reports invalid header on line 1 in `stderr` with exit code 2) in `tests/test_cli.py`
+- [ ] T030 [P] [US3] Implement automated acceptance test for AS-009 (header mismatch or uppercase `Source,Target` reports invalid header with its real line number in `stderr` with exit code 2) in `tests/test_cli.py`
 - [ ] T031 [P] [US3] Implement automated acceptance test for AS-010 (row with column count != 2 reports line number in `stderr` with exit code 2) in `tests/test_cli.py`
 - [ ] T032 [P] [US3] Implement automated acceptance test for AS-012 (row with only comma or spaces ` , ` reports line number in `stderr` with exit code 2) in `tests/test_cli.py`
 - [ ] T033 [P] [US3] Implement automated acceptance test for AS-013 (fail-fast immediate abort on first malformed row, reporting line in `stderr`, empty `stdout`, with exit code 2) in `tests/test_cli.py`
-- [ ] T034 [P] [US3] Implement automated acceptance test for missing file argument (reports usage in `stderr` with exit code 2 and zero Python tracebacks) in `tests/test_cli.py`
+- [ ] T034 [P] [US3] Implement automated acceptance test for AS-019 (missing file argument reports usage in `stderr` with exit code 2 and zero Python tracebacks) in `tests/test_cli.py`
+- [ ] T034b [P] [US3] Create fixture `tests/fixtures/latin1.csv` and implement automated acceptance test for AS-020 (non-UTF-8 file reports file name in `stderr` with exit code 1) in `tests/test_cli.py`
 
 ### Implementation for User Story 3
 
@@ -120,7 +121,8 @@
 **Purpose**: End-to-end verification, test oracle validation, and code quality checks
 
 - [ ] T037 [P] Execute end-to-end validation scenarios against `specs/001-directed-graphs/quickstart.md`
-- [ ] T038 [P] Run full test suite with `pytest -v` verifying 100% pass rate across all 18 acceptance scenarios (`AS-001` to `AS-018`)
+- [ ] T038 [P] Run full test suite with `pytest -v` verifying 100% pass rate across all 20 acceptance scenarios (`AS-001` to `AS-020`)
+- [ ] T038b [P] Implement performance test for SC-001 (generated graph with 10,000 edges is displayed in under 1 second) in `tests/test_cli.py`
 - [ ] T039 Clean up code, add type annotations and docstrings across `src/graphcli/` and `tests/`
 
 ---

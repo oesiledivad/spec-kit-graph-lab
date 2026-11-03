@@ -1,6 +1,6 @@
 # Implementation Plan: Directed Graphs
 
-**Branch**: `001-directed-graphs` | **Date**: 2026-11-02 | **Spec**: [specs/001-directed-graphs/spec.md](file:///C:/Users/Laptop/spec-kit-graph-lab/specs/001-directed-graphs/spec.md)
+**Branch**: `001-directed-graphs` | **Date**: 2026-11-02 | **Spec**: [specs/001-directed-graphs/spec.md](spec.md)
 
 **Input**: Feature specification from `specs/001-directed-graphs/spec.md` and user planning directives.
 
@@ -50,8 +50,8 @@ El grafo se modelará en memoria como una lista de adyacencia (`dict[str, set[st
 |--------------------------|--------|---------------------------|
 | **I. Stack y estructura** | **PASS** | Python 3.11+, solo stdlib en `src/`, pytest en `tests/`, paquete `graphcli`, invocable con `python -m graphcli show <archivo>`. |
 | **II. Grafos y algoritmos propios** | **PASS** | Implementación propia en `src/graphcli/graph.py` basada en `dict[str, set[str]]` y `set[str]`. Justificada en `research.md`. NetworkX solo en `tests/`. |
-| **III. Pruebas obligatorias** | **PASS** | 18 escenarios de aceptación (`AS-001` a `AS-018`) con pruebas asignadas. Tareas de prueba planificadas antes del código en `tasks.md`. |
-| **IV. Spec y código coinciden** | **PASS** | La especificación [spec.md](file:///C:/Users/Laptop/spec-kit-graph-lab/specs/001-directed-graphs/spec.md) está clarificada (`Status: Clarified`). El plan respeta fielmente todas sus cláusulas. |
+| **III. Pruebas obligatorias** | **PASS** | 20 escenarios de aceptación (`AS-001` a `AS-020`) con pruebas asignadas. Tareas de prueba planificadas antes del código en `tasks.md`. |
+| **IV. Spec y código coinciden** | **PASS** | La especificación [spec.md](spec.md) está clarificada (`Status: Clarified`). El plan respeta fielmente todas sus cláusulas. |
 | **V. Comportamiento del CLI** | **PASS** | `stdout` para resultados, `stderr` para advertencias/errores, códigos de salida 0, 1 y 2, cero volcados de traceback. |
 | **VI. Salida determinista** | **PASS** | Ordenación garantizada por puntos de código Unicode estándar mediante `sorted()`. |
 | **VII. Simplicidad** | **PASS** | Solo lo requerido para la Feature 1. Sin dependencias externas, plugins ni lógica anticipada de Feature 2. |

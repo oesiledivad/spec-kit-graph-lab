@@ -61,7 +61,7 @@ Ningún mensaje de error se escribe en `stdout`. Todos los errores se dirigen ex
 | Condición | Código de salida | Formato / Destino del mensaje |
 |-----------|------------------|-------------------------------|
 | Ejecución exitosa | `0` | Salida del grafo en `stdout`. `stderr` vacío. |
-| Archivo no encontrado o no legible por permisos | `1` | `stderr`: Mensaje descriptivo indicando el nombre del archivo no encontrado o inaccesible. |
+| Archivo no encontrado, ruta que es carpeta, sin permisos o contenido no UTF-8 | `1` | `stderr`: Mensaje descriptivo indicando el nombre del archivo no encontrado o inaccesible. |
 | Invocación sin argumentos requeridos (ej. sin archivo o sin subcomando) | `2` | `stderr`: Mensaje de uso y sintaxis de línea de comandos. |
 | Archivo vacío (0 bytes) | `2` | `stderr`: Error indicando que el archivo carece del encabezado requerido `source,target` en la línea 1. |
 | Encabezado inválido o faltante en la primera línea no vacía | `2` | `stderr`: Error indicando encabezado inválido en la línea N correspondiente. |
