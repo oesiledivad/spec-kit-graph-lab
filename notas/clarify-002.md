@@ -10,11 +10,11 @@ Cómo usar este archivo: igual que `clarify-001.md`. Antes de `/speckit-clarify`
 
 | # | Pregunta | Opciones | Recomendación | Decisión final | Origen | FR / AS |
 |---|----------|----------|---------------|----------------|--------|---------|
-| A1 | ¿Cómo pide el usuario el orden topológico? | Subcomando nuevo `order` / `topo` / opción de `show` (`show --order`) | Subcomando `order` | | | |
-| A2 | ¿Cuál es el formato de salida? | Un vértice por línea / en una línea separado por ` -> ` / numerado | Un vértice por línea | | | |
-| A3 | Si hay varios órdenes válidos, ¿cuál se muestra? | El menor en orden lexicográfico (siempre el mismo) / cualquiera válido | El menor en orden lexicográfico (mismo orden Unicode que la Feature 1) | | | |
-| A4 | Si no existe orden (hay ciclo), ¿qué ve el usuario? | Solo "hay ciclo" / un ciclo concreto / todos los ciclos / todos los vértices involucrados | Un ciclo concreto en stderr, p. ej. `auth -> session -> user-profile -> auth` | | | |
-| A5 | ¿Qué código de salida se usa cuando hay ciclo? | 1 / 2 / 3 (nuevo) | 3 (distinto de "archivo no existe" = 1 y "formato" = 2) | | | |
+| A1 | ¿Cómo pide el usuario el orden topológico? | Subcomando nuevo `order` / `topo` / opción de `show` (`show --order`) | Subcomando `order` | Subcomando `order` | nosotros | FR-101 |
+| A2 | ¿Cuál es el formato de salida? | Un vértice por línea / en una línea separado por ` -> ` / numerado | Un vértice por línea | Un vértice por línea, sin encabezado | nosotros | FR-104, AS-101 |
+| A3 | Si hay varios órdenes válidos, ¿cuál se muestra? | El menor en orden lexicográfico (siempre el mismo) / cualquiera válido | El menor en orden lexicográfico (mismo orden Unicode que la Feature 1) | El menor en orden lexicográfico (Unicode) | nosotros | FR-103, AS-103 |
+| A4 | Si no existe orden (hay ciclo), ¿qué ve el usuario? | Solo "hay ciclo" / un ciclo concreto / todos los ciclos / todos los vértices involucrados | Un ciclo concreto en stderr, p. ej. `auth -> session -> user-profile -> auth` | Un ciclo concreto por cada grupo de dependencia circular, en stderr | nosotros | FR-105, FR-106, AS-104 |
+| A5 | ¿Qué código de salida se usa cuando hay ciclo? | 1 / 2 / 3 (nuevo) | 3 (distinto de "archivo no existe" = 1 y "formato" = 2) | 3 | nosotros | FR-108, AS-104 |
 
 ---
 
@@ -22,11 +22,11 @@ Cómo usar este archivo: igual que `clarify-001.md`. Antes de `/speckit-clarify`
 
 | # | Pregunta | Opciones | Recomendación | Decisión final | Origen | FR / AS |
 |---|----------|----------|---------------|----------------|--------|---------|
-| B1 | ¿Un auto-lazo (`metrics,metrics`) cuenta como ciclo? | Sí / se ignora para el orden | Sí (ciclo de longitud 1: `metrics -> metrics`) | | | |
-| B2 | `build-with-cycle.csv` tiene **dos** ciclos (`auth→session→user-profile→auth` y `metrics→metrics`). ¿Se muestra uno o todos? | Uno (¿cuál, de forma determinista?) / todos | **Decidirlo nosotros** — buena pregunta para la reflexión | | | |
-| B3 | ¿Se incluyen los vértices aislados (`watch`) en el orden? | Sí / no | Sí, en la posición que les toque por el desempate | | | |
-| B4 | Si hay ciclo, ¿se imprime algo en stdout (orden parcial)? | Nada / orden parcial de lo que sí se pudo ordenar | Nada en stdout; solo el error en stderr | | | |
-| B5 | ¿Grafo vacío (solo encabezado)? | Salida vacía, código 0 / error | Salida vacía, código 0 | | | |
+| B1 | ¿Un auto-lazo (`metrics,metrics`) cuenta como ciclo? | Sí / se ignora para el orden | Sí (ciclo de longitud 1: `metrics -> metrics`) | Sí, ciclo de longitud 1 | nosotros | FR-105, AS-108 |
+| B2 | `build-with-cycle.csv` tiene **dos** ciclos (`auth→session→user-profile→auth` y `metrics→metrics`). ¿Se muestra uno o todos? | Uno (¿cuál, de forma determinista?) / todos | **Decidirlo nosotros** — buena pregunta para la reflexión | **Todos**: un ciclo (el más corto desde el vértice menor) por cada grupo | nosotros | FR-106, AS-104, AS-109 |
+| B3 | ¿Se incluyen los vértices aislados (`watch`) en el orden? | Sí / no | Sí, en la posición que les toque por el desempate | Sí | nosotros | FR-102, AS-106 |
+| B4 | Si hay ciclo, ¿se imprime algo en stdout (orden parcial)? | Nada / orden parcial de lo que sí se pudo ordenar | Nada en stdout; solo el error en stderr | Nada en stdout | nosotros | FR-105 |
+| B5 | ¿Grafo vacío (solo encabezado)? | Salida vacía, código 0 / error | Salida vacía, código 0 | Salida vacía, código 0 | nosotros | FR-104, AS-107 |
 
 ---
 
@@ -55,4 +55,6 @@ Calculadas a mano / verificables con `nx.lexicographical_topological_sort`:
 ## Pregunta más difícil (para REFLECTION.md)
 
 > Escribir aquí cuál fue y por qué:
+
+Candidata: B2 (uno o todos los ciclos). Mostrar todos los ciclos simples puede ser exponencial; mostrar solo uno obliga al usuario a correr la herramienta varias veces. Se eligió un ciclo por cada grupo de dependencia circular: útil, finito y determinista.
 

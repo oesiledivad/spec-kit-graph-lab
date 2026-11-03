@@ -13,7 +13,7 @@
 
 ## Requirement Completeness
 
-- [ ] No [NEEDS CLARIFICATION] markers remain — pendientes: formato de salida, desempate, información del ciclo y código de salida, vértices aislados
+- [x] No [NEEDS CLARIFICATION] markers remain (resueltos en la sesión de clarify del 2026-11-03)
 - [x] Requirements are testable and unambiguous (salvo los marcados)
 - [x] Success criteria are measurable
 - [x] Success criteria are technology-agnostic
@@ -24,10 +24,11 @@
 
 ## Feature Readiness
 
-- [ ] All functional requirements have clear acceptance criteria — tras clarify
+- [x] All functional requirements have clear acceptance criteria
 - [x] User scenarios cover primary flows
 - [x] No implementation details leak into specification
 
 ## Notes
 
-- Ejecutar `/speckit-clarify` antes de `/speckit-plan`.
+- Clarify completado: subcomando `order`, un vértice por línea, desempate lexicográfico, código 3 con un ciclo por grupo, auto-lazo = ciclo, aislados incluidos, grafo vacío = salida vacía.
+- Listo para `/speckit-plan`.
